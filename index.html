@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>លិខិតអញ្ជើញមង្គលការ - ស្ងឿន ដេវីត & ????? ??????</title>
+    <link href="https://fonts.googleapis.com/css2?family=Moul&family=Kantumruy+Pro:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-gold: #d4af37;
+            --dark-gold: #aa7c11;
+            --bg-cream: #fffdfa;
+            --text-color: #2c2c2c;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Kantumruy Pro', sans-serif;
+        }
+
+        body {
+            background-color: #0d0d0d;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .mobile-card {
+            width: 100%;
+            max-width: 430px;
+            min-height: 100vh;
+            background: var(--bg-cream);
+            position: relative;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .mobile-card::-webkit-scrollbar {
+            display: none;
+        }
+
+        .petal {
+            position: absolute;
+            top: -20px;
+            background: linear-gradient(135deg, #ffc0cb 0%, #ffb7c5 50%, #ff8da1 100%);
+            width: 12px;
+            height: 18px;
+            border-radius: 50% 50% 50% 50% / 80% 80% 20% 20%;
+            clip-path: polygon(0% 0%, 35% 0%, 50% 15%, 65% 0%, 100% 0%, 100% 100%, 0% 100%);
+            opacity: 0.85;
+            pointer-events: none;
+            animation: fall linear infinite;
+            z-index: 99;
+            box-shadow: 0 2px 5px rgba(255, 183, 197, 0.4);
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0.8; }
+            100% { transform: translateY(105vh) rotate(360deg); opacity: 0.2; }
+        }
+
+        /* កែសម្រួលទ្វារមិនឱ្យកាត់គែម និងទប់ទំហំឱ្យត្រូវកណ្តាលស្អាត */
+        .door-wrapper {
+            display: flex;
+            width: 100%;
+            max-width: 430px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            overflow: hidden;
+            z-index: 10000;
+            background: #0d0d0d;
+            pointer-events: auto;
+            perspective: 1200px;
+            transition: visibility 2.2s ease, opacity 2.2s ease;
+        }
+
+        .door {
+            width: 50%;
+            height: 100%;
+            border: 4px solid #d4af37;
+            box-shadow: inset 0 0 25px rgba(0,0,0,0.9);
+            position: relative;
+            transition: transform 2.2s cubic-bezier(0.25, 1, 0.5, 1), opacity 2.2s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            
+            /* កែសម្រួលត្រង់នេះ ដើម្បីធានាថាមិនឱ្យកាត់គែមលើ ឬក្រោម */
+            background-size: 100% 100% !important; 
+            background-repeat: no-repeat !important;
+            
+            background-color: #1a0c05;
+            backface-visibility: hidden;
+            cursor: pointer;
+        }
+
+        .door-left {
+            background-image: url('door-left.jpg');
+            background-position: left center;
+            transform-origin: left center;
+            border-right: 2px solid #110703;
+        }
+
+        .door-right {
+            background-image: url('door-right.jpg');
+            background-position: right center;
+            transform-origin: right center;
+            border-left: 2px solid #110703;
+        }
+
+        .door-wrapper.opened .door-left {
+            transform: rotateY(120deg);
+            opacity: 0.3;
+        }
+        .door-wrapper.opened .door-right {
+            transform: rotateY(-120deg);
+            opacity: 0.3;
+        }
+        .door-wrapper.opened {
+            pointer-events: none;
+            visibility: hidden;
+            opacity: 0;
+        }
+
+        .content {
+            padding: 15px;
+            text-align: center;
+            color: var(--text-color);
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ត្រូវធានាថា page-content ទាំងអស់ត្រូវលាក់ជាមុនសិន */
+        .page-content {
+            display: none !important; 
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            box-sizing: border-box;
+            
+            /* បន្ថែម padding ត្រង់នេះដើម្បីសន្សល់គែមឆ្វេង ស្តាំ លើ ក្រោម កុំឱ្យដាច់អក្សរ */
+            padding: 15px 20px !important; 
+            overflow-y: auto; /* អនុញ្ញាតឱ្យរំកិលមើលបានបើខ្លឹមសារវែងពេក */
+        }
+
+        .page-content.active {
+            display: flex !important;
+            flex-direction: column;
+        }
+
+       #page1 {
+            height: auto
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* ប្រមូលផ្ដុំធាតុទាំងអស់មកកណ្តាល */
+            align-items: center;
+            gap: 12px; /* កំណត់ចន្លោះគម្លាតរវាងធាតុនីមួយៗឱ្យនៅជិតគ្នា সাល្មម */
+            padding: 10px 0;
+        }
+
+        #page2.active {
+            height: auto;
+            overflow-y: auto;
+        }
+        
+        .nav-btn-container {
+            margin: 10px 0;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            padding: 8px 20px;
+            background: linear-gradient(45deg, #d4af37, #aa7c11);
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .header-title {
+            font-family: 'Moul', cursive;
+            color: var(--dark-gold);
+            font-size: 22px;
+            margin: 5px 0;
+        }
+
+        .couple-names {
+            font-family: 'Moul', cursive;
+            font-size: 17px;
+            color: var(--primary-gold);
+            margin: 5px 0;
+            min-height: 25px;
+            display: inline-block;
+        }
+
+        .photo-frame {
+            width: 100%;
+            max-width: 380px;
+            /* ផ្លាស់ប្តូរ ឬដក height: auto ចេញ ហើយជំនួសដោយកម្ពស់ថេរ ឬ min-height វិញ ដើម្បីឱ្យស៊ុមទូលាយវែង */
+            height: 1700px !important; /* អ្នកអាចកែលេខនេះឡើងចុះបាន (ឧទាហរណ៍ 450px, 500px, 550px) តាមប្រវែងវីដេអូរបស់អ្នក */
+            border-radius: 12px;
+            overflow: hidden;
+            border: 3px solid var(--primary-gold);
+            margin: 5px auto;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .photo-frame video {
+            width: 100% !important;
+            height: 100% !important;
+            max-height: 100% !important;
+            display: block;
+            object-fit: cover !important; /* ធានាថាវីដេអូបង្ហាញពេញក្នុងស៊ុមដោយមិនបាច់ Crop ឬដាច់សាច់វីដេអូឡើយ */
+        }
+       
+        .date-badge-wrapper {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 10px auto;
+            padding: 6px 12px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            border: 1px solid var(--primary-gold);
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
+            width: auto;
+        }
+
+        .date-top-month {
+            font-size: 14px;
+            font-family: 'Moul', cursive;
+            color: var(--dark-gold);
+            margin-bottom: 2px;
+        }
+
+        .date-middle-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .date-day-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .date-day-name {
+            font-size: 14px;
+            font-family: 'Moul', cursive;
+            color: var(--dark-gold);
+            margin-bottom: 1px;
+            white-space: nowrap;
+        }
+
+        .date-divider-line {
+            width: 100%;
+            height: 1.5px;
+            background: var(--primary-gold);
+        }
+
+        .date-big-number {
+            font-size: 24px;
+            font-family: 'Moul', cursive;
+            color: var(--dark-gold);
+            line-height: 1;
+            margin: 0 8px;
+        }
+
+        .date-time-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .date-time {
+            font-size: 14px;
+            font-family: 'Moul', cursive;
+            color: var(--dark-gold);
+            margin-bottom: 1px;
+            white-space: nowrap;
+        }
+
+        .date-bottom-year {
+            font-size: 14px;
+            font-family: 'Moul', cursive;
+            color: var(--dark-gold);
+            margin-top: 2px;
+        }
+
+        .gallery-section { margin: 25px 0; }
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .gallery-item {
+            height: 140px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--primary-gold);
+        }
+        .gallery-item img { width: 100%; height: 100%; object-fit: cover; }
+
+        .timer-container {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border-radius: 15px;
+            border: 1px solid var(--primary-gold);
+        }
+
+        .timer-box { display: flex; flex-direction: column; align-items: center; }
+        .timer-number { font-size: 22px; font-weight: bold; color: var(--dark-gold); }
+        .timer-label { font-size: 11px; color: #666; }
+
+        .map-container {
+            width: 100%;
+            height: 220px;
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid var(--primary-gold);
+            margin-top: 10px;
+        }
+        .map-container iframe { width: 100%; height: 100%; border: 0; }
+
+        .schedule-section {
+            margin: 25px 0;
+            background: #ffffff;
+            padding: 20px 15px;
+            border-radius: 15px;
+            border: 1px solid var(--primary-gold);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            text-align: left;
+        }
+
+        .schedule-list {
+            margin-top: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .schedule-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: rgba(212, 175, 55, 0.08);
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-gold);
+        }
+
+        .schedule-time {
+            font-weight: bold;
+            color: var(--dark-gold);
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        .schedule-title {
+            font-size: 13px;
+            color: var(--text-color);
+            text-align: right;
+        }
+
+        .qr-section {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 25px 0;
+            text-align: center;
+            border: 1px solid var(--primary-gold);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .qr-image {
+            width: 200px;
+            height: 200px;
+            object-fit: contain;
+            margin: 15px 0;
+            border: 2px dashed var(--primary-gold);
+            border-radius: 10px;
+            padding: 5px;
+        }
+
+        .thank-you-section {
+            margin: 25px 0 10px 0;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(170, 124, 17, 0.15));
+            border-radius: 15px;
+            border: 1px solid var(--primary-gold);
+            text-align: center;
+        }
+
+        .item { margin-bottom: 6px; font-size: 14px; }
+    </style>
+</head>
+<body>
+   
+    <div class="mobile-card" id="cardContainer">
+       
+        <div class="door-wrapper" id="doorWrapper">
+            <div class="door door-left" onclick="openInvitation()"></div>
+            <div class="door door-right" onclick="openInvitation()"></div>
+        </div>
+
+        <audio id="doorSound">
+            <source src="door-sound.mp3" type="audio/mpeg">
+        </audio>
+        <audio id="weddingMusic" loop>
+            <source src="music.mp3" type="audio/mpeg">
+        </audio>
+
+        <div class="content">            
+            <!-- ===== ទំព័រទី ១ (PAGE 1) ===== -->
+            <div id="page1" class="page-content active">
+                <div style="text-align: center;">
+                    <h1 class="header-title" style="font-size: 28px; margin: 0;">សិរីសួស្តី អាពាហ៍ពិពាហ៍</h1>
+                    <p style="font-size: 18px; color: var(--dark-gold); margin: 2px 0;">កូនប្រុស    និង    កូនស្រី</p>
+                    <div class="couple-names" id="animatedNames" style="margin: 0; font-size: 24px;"></div>
+                </div>
+
+                <!-- វីដេអូ Highlight -->
+                <div class="photo-frame" style="height: 180px; margin: 0;">
+                    <video autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover;">
+                        <source src="video.mp4" type="video/mp4">
+                        កម្មវិធីរុករករបស់អ្នកមិនគាំទ្រការចាក់វីដេអូឡើយ។
+                    </video>
+                </div>
+
+                <!-- ថ្ងៃទទួលភ្ញៀវ -->
+                <div class="date-badge-wrapper" style="margin: 0;">
+                    <div class="date-top-month">ធ្នូ</div>
+                    <div class="date-middle-row">
+                        <div class="date-day-container">
+                            <span class="date-day-name">ថ្ងៃព្រហស្បតិ៍</span>
+                            <div class="date-divider-line"></div>
+                        </div>
+                        <span class="date-big-number">៣១</span>
+                        <div class="date-time-container">
+                            <span class="date-time">៥:០០ ល្ងាច</span>
+                            <div class="date-divider-line"></div>
+                        </div>
+                    </div>
+                    <div class="date-bottom-year">២០២៦</div>
+                </div>
+
+                <div class="nav-btn-container" style="margin: 0;">
+                    <button class="nav-btn" onclick="nextPage()">ទំព័របន្ទាប់ ➔</button>
+                </div>
+            </div>
+
+            <div id="page2" class="page-content">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; margin: 10px 0; text-align: left;">
+                    <div style="flex: 1;">
+                        <div class="item">
+                            <span style="color: #ffa200">លោក <span style="font-family: 'Moul'">??????????</span></span>
+                        </div>
+                        <div class="item">
+                            <span style="color: #ffa200">អ្នកស្រី <span style="font-family: 'Moul'">??????????</span></span>
+                        </div>
+                    </div>
+   
+                    <div style="flex: 1;">
+                        <div class="item">
+                            <span style="color: #ffa200">លោក <span style="font-family: 'Moul'">??????????</span></span>
+                        </div>
+                        <div class="item">
+                            <span style="color: #ffa200">អ្នកស្រី <span style="font-family: 'Moul'">??????????</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <h1 class="header-title" style="font-size:14px">មានកិត្តិយសសូមគោរពអញ្ជើញ</h1>
+               
+                <p style="font-size: 14px; color: #ffa200;">ឯកឧត្តម លោកជំទាវ លោក លោកស្រី អ្នកនាងកញ្ញា</p>
+                <p style="color: #ffa200; font-size: 13px; line-height: 1.6; margin-top: 8px;">អញ្ជើញចូលរួមជាធិបតី និងជាភ្ញៀវកិត្តិយស ក្នុង
+                    <span style="font-family: 'Moul'">ពិធីរៀបអាពាហ៍ពិពាហ៍</span>
+                    កូនប្រុស-ស្រីរបស់យើងខ្ញុំដើម្បីប្រសិទ្ធិពរជ័យ សិរីមង្គល បវរប្រសើរ ដល់គូរស្វាមីភរិយាថ្មី និងពិសារភោជនាហារប្រព្រឹត្តទៅនៅ
+                    <span style="font-size:13px;font-family: 'Moul'">ថ្ងៃព្រហស្បតិ៍ ៧រោច ខែមគសិរ ឆ្នាំមមី អដ្ឋស័ក ព.ស. ២៥៧០</span>
+                    ដែលត្រូវនឹង
+                    <span style="font-size:13px; font-family: 'Moul'">ថ្ងៃទី៣១ ខែធ្នូ ឆ្នាំ២០២៦ វេលាម៉ោង ៥:០០ ល្ងាច</span>
+                    នៅគេហដ្ឋានខាងស្រីស្ថិតនៅ
+                    <b>ភូមិ?????????? ឃុំ?????????? ស្រុក?????????? ខេត្ត?????????? </b>ដោយមេត្រីភាព។
+                </p>
+                <p style="color: #ffa200; font-size: 12px; margin-top: 5px;">(សូមពិនិត្យមើលប្លង់បញ្ជាក់)</p>
+
+                <div class="schedule-section">
+                    <h3 style="font-family: 'Moul'; font-size: 14px; color: var(--dark-gold); text-align: center;">របៀបវារៈ</h3>
+                    <p style="font-size: 16px; line-height: 1.6; color: #ffa200; margin-top: 10px; text-align: center"><b>ថ្ងៃពុធ ទី៣០ ខែធ្នូ ឆ្នាំ២០២៦</b></p>
+                    <div class="schedule-list">
+                        <div class="schedule-item"><span class="schedule-time">៣:០០ រសៀល</span><span class="schedule-title" style="color: blue;">ពិធីក្រុងពាលី</span></div>
+                        <div class="schedule-item"><span class="schedule-time">៤:០០ រសៀល</span><span class="schedule-title" style="color: blue;">ពិធីសូត្រមន្តចំរើនព្រះបរិត្ត</span></div>
+                        <div class="schedule-item"><span class="schedule-time">៥:០០ ល្ងាច</span><span class="schedule-title" style="color: blue;">ពិធីកាត់ខាន់ស្លា</span></div>
+                        <div class="schedule-item"><span class="schedule-time">៦:០០ ល្ងាច</span><span class="schedule-title" style="color: blue;">អញ្ជើញភ្ញៀវពិសាអាហារពេលល្ងាច</span></div>
+                    </div>
+                    <p style="font-size: 16px; line-height: 1.6; color: #ffa200; margin-top: 15px; text-align: center"><b>ថ្ងៃព្រហស្បតិ៍ ទី៣១ ខែធ្នូ ឆ្នាំ២០២៦</b></p>
+                    <div class="schedule-list">
+                        <div class="schedule-item"><span class="schedule-time">៦:៣០ ព្រឹក</span><span class="schedule-title" style="color: blue;">ជួបជុំភ្ញៀវកិត្តិយសរៀបចំហែរជំនួន</span></div>
+                        <div class="schedule-item"><span class="schedule-time">៧:០០ ព្រឹក</span><span class="schedule-title" style="color: blue;">ពិធីហែជំនូន(កំណត់)</span></div>
+                        <div class="schedule-item"><span class="schedule-time">៧:៣០ ព្រឹក</span><span class="schedule-title" style="color: blue;">ពិធីរាប់ផ្លែឈើ ពិសាស្លា និងបំពាក់ចិញ្ចៀន</span></div>
+                        <div class="schedule-item"><span class="schedule-time">០៩:០០ ព្រឹក</span><span class="schedule-title" style="color: blue;">ពិធីកាត់សក់បង្កក់សិរី</span></div>
+                        <div class="schedule-item"><span class="schedule-time">១០:១៥ ព្រឹក</span><span class="schedule-title" style="color: blue;">ពិធីសំពះផ្ទឹម សែនចងដៃ និងបាចផ្កាស្លា</span></div>
+                        <div class="schedule-item"><span class="schedule-time">១១:១៥ ថ្ងៃត្រង់</span><span class="schedule-title" style="color: blue;">អញ្ជើញភ្ញៀវពិសារអាហារថ្ងៃត្រង់</span></div>
+                        <div class="schedule-item"><span class="schedule-time">៥:០០ ល្ងាច</span><span class="schedule-title" style="color: blue;">អញ្ជើញភ្ញៀវពិសារភោជនាហារពេលល្ងាច</span></div>
+                    </div>
+                </div>
+
+                <p style="font-weight: 600; margin-top: 15px; color: var(--dark-gold);">កម្មវិធីនឹងចាប់ផ្តើមក្នុងរយៈពេល</p>
+                <div class="timer-container">
+                    <div class="timer-box"><span class="timer-number" id="days">00</span><span class="timer-label">ថ្ងៃ</span></div>
+                    <div class="timer-box"><span class="timer-number" id="hours">00</span><span class="timer-label">ម៉ោង</span></div>
+                    <div class="timer-box"><span class="timer-number" id="minutes">00</span><span class="timer-label">នាទី</span></div>
+                    <div class="timer-box"><span class="timer-number" id="seconds">00</span><span class="timer-label">វិនាទី</span></div>
+                </div>
+
+                <div class="gallery-section">
+                    <h3 style="font-family: 'Moul'; font-size: 14px; color: var(--dark-gold);">រូបថតកម្រងអនុស្សាវរីយ៍</h3>
+                    <div class="gallery-grid">
+                        <div class="gallery-item"><img src="photo1.jpg" alt="Photo 1"></div>
+                        <div class="gallery-item"><img src="photo2.jpg" alt="Photo 2"></div>
+                        <div class="gallery-item"><img src="photo3.jpg" alt="Photo 3"></div>
+                        <div class="gallery-item"><img src="photo4.jpg" alt="Photo 4"></div>
+                        <div class="gallery-item"><img src="photo5.jpg" alt="Photo 5"></div>
+                        <div class="gallery-item"><img src="photo6.jpg" alt="Photo 6"></div>
+                        <div class="gallery-item"><img src="photo7.jpg" alt="Photo 7"></div>
+                        <div class="gallery-item"><img src="photo8.jpg" alt="Photo 8"></div>
+                        <div class="gallery-item"><img src="photo9.jpg" alt="Photo 9"></div>
+                        <div class="gallery-item"><img src="photo10.jpg" alt="Photo 10"></div>
+                    </div>
+                </div>
+
+                <div style="margin: 25px 0;">
+                    <h3 style="font-family: 'Moul'; font-size: 14px; color: var(--dark-gold);">ទីតាំងប្រារព្ធពិធី</h3>
+                    <div class="map-container">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2828.6655514188014!2d103.0289091733056!3d13.08317791242574!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x310531a6204b8f23%3A0x695ea3dcb7844661!2sTa%20Kream%20High%20School!5e1!3m2!1sen!2skh!4v1788710027622!5m2!1sen!2skh"></iframe>" allowfullscreen="" loading="lazy"></iframe>
+                    </div>
+                    <a href="https://maps.app.goo.gl/" target="_blank" style="display: inline-block; margin-top: 10px; padding: 10px 20px; background-color: var(--dark-gold); color: white; text-decoration: none; border-radius: 8px; font-size: 13px; font-weight: bold;">
+                        📍 បើកមើលទីតាំងក្នុង Google Maps
+                    </a>
+                </div>
+
+                <div class="qr-section">
+                    <h3 style="font-family: 'Moul'; font-size: 14px; color: var(--dark-gold);">អំណោយចងដៃ (QR Code)</h3>
+                    <p style="font-size: 12px; color: #666; margin-top: 5px;">សូមអរគុណសម្រាប់ទឹកចិត្ត និងពរជ័យ</p>
+                    <img src="qr-code.png" alt="ABA QR Code" class="qr-image">
+                    <p style="font-size: 13px; font-weight: bold; color: var(--text-color);">ឈ្មោះគណនី ABA : SNGEUON DEVITH</p>
+                </div>
+
+                <div class="thank-you-section">
+                    <h3 style="font-family: 'Moul'; font-size: 14px; color: var(--dark-gold); margin-bottom: 8px;">សូមអរគុណ</h3>
+                    <p style="font-size: 13px; line-height: 1.6; color: #3f06fc;">
+                        វត្តមានដ៏ខ្ពង់ខ្ពស់របស់ ឯកឧត្តម លោកជំទាវ លោក លោកស្រី អ្នកនាងកញ្ញា
+                        គឺជាកិត្តិយសដ៏ធំធេង និងជាពរជ័យដ៏ប្រសើរថ្លៃថ្លាបំផុតសម្រាប់គ្រួសារយើងខ្ញុំ។
+                    </p>
+                </div>
+
+                <div class="thank-you-section">
+                    <h3 style="font-family: 'Moul'; font-size: 14px; color: var(--dark-gold); margin-bottom: 12px;">ទំនាក់ទំនង</h3>
+                    <div style="margin-bottom: 10px;">
+                        <span style="font-weight: bold; color: #3f06fc;">កូនប្រុស (ដេវីត):</span><br>
+                        <a href="https://facebook.com/sngoeun.devith" target="_blank" style="text-decoration: none; color: #1877F2; margin-right: 15px; font-size: 13px;">
+                            <i class="fab fa-facebook"></i> Sngoeun Devith
+                        </a>
+                        <a href="https://t.me/sngoeun_devith" target="_blank" style="text-decoration: none; color: #0088cc; font-size: 13px;">
+                            <i class="fab fa-telegram"></i> 012 29 26 04
+                        </a>
+                    </div>
+                    <div>
+                        <span style="font-weight: bold; color: #3f06fc;">កូនស្រី (????????):</span><br>
+                        <a href="https://www.facebook.com/" target="_blank" style="text-decoration: none; color: #1877F2; margin-right: 15px; font-size: 13px;">
+                            <i class="fab fa-facebook"></i> ???????????
+                        </a>
+                        <a href="https://t.me" target="_blank" style="text-decoration: none; color: #0088cc; font-size: 13px;">
+                            <i class="fab fa-telegram"></i> ????????????
+                        </a>
+                    </div>
+                </div>
+
+                <div class="nav-btn-container">
+                    <button class="nav-btn" onclick="prevPage()">➔ ទំព័រមុន</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const textToType = "ស្ងឿន ដេវីត    ♥    ????? ??????";
+        let charIndex = 0;
+
+        function typeWriter() {
+            if (charIndex < textToType.length) {
+                document.getElementById("animatedNames").innerHTML += textToType.charAt(charIndex);
+                charIndex++;
+                setTimeout(typeWriter, 120);
+            }
+        }
+
+        function openInvitation() {
+            const doorSound = document.getElementById('doorSound');
+            doorSound.play().catch(error => {
+                console.log("Audio play blocked or missing:", error);
+            });
+
+            document.getElementById('doorWrapper').classList.add('opened');
+
+            setTimeout(() => {
+                document.getElementById('weddingMusic').play().catch(err => console.log(err));
+            }, 500);
+
+            createPetals();
+            setTimeout(typeWriter, 1000);
+        }
+        let currentPage = 1;
+        const totalPages = 3; // (ឬចំនួនទំព័រពិតប្រាកដរបស់អ្នក)
+
+        function showPage(pageNumber) {
+            // ដក class active ចេញពីគ្រប់ page ទាំងអស់
+            for (let i = 1; i <= totalPages; i++) {
+                const page = document.getElementById('page' + i);
+                if (page) {
+                    page.classList.remove('active');
+                }
+            }
+
+            // បន្ថែម class active ទៅកាន់ page បច្ចុប្បន្នដែលត្រូវបង្ហាញ
+            const targetPage = document.getElementById('page' + pageNumber);
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
+        }
+
+        function nextPage() {
+            if (currentPage < totalPages) {
+                currentPage++;
+                showPage(currentPage);
+            }
+        }
+
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                showPage(currentPage);
+            }
+        }
+
+        // កំណត់ឱ្យបង្ហាញទំព័រទី១ នៅពេលចាប់ផ្តើមដំបូង
+        window.onload = function() {
+            showPage(1);
+        };
+
+        function createPetals() {
+            const container = document.getElementById('cardContainer');
+            for (let i = 0; i < 30; i++) {
+                const petal = document.createElement('div');
+                petal.classList.add('petal');
+                petal.style.left = Math.random() * 100 + '%';
+                petal.style.width = Math.random() * 10 + 10 + 'px';
+                petal.style.height = Math.random() * 10 + 15 + 'px';
+                petal.style.animationDuration = Math.random() * 3 + 3 + 's';
+                petal.style.animationDelay = Math.random() * 2 + 's';
+                container.appendChild(petal);
+            }
+        }
+
+        const weddingDate = new Date("Dec 31, 2026 17:00:00").getTime();
+        setInterval(function() {
+            const now = new Date().getTime();
+            const distance = weddingDate - now;
+
+            if (distance > 0) {
+                document.getElementById("days").innerText = Math.floor(distance / (1000 * 60 * 60 * 24));
+                document.getElementById("hours").innerText = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                document.getElementById("minutes").innerText = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                document.getElementById("seconds").innerText = Math.floor((distance % (1000 * 60)) / 1000);
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
